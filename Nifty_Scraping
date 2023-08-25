@@ -1,0 +1,22 @@
+from bs4 import BeautifulSoup
+import requests
+url = 'https://en.wikipedia.org/wiki/NIFTY_50'
+page = requests.get(url)
+soup = BeautifulSoup(page.text,'html')
+table = soup.find('table', class_ = 'wikitable sortable')
+Nifty50_titles = table.find_all('th')
+Nifty50_titles_list = [title.text.strip() for title in Nifty50_titles ]
+Nifty50_titles_list
+import pandas as pd
+df = pd.DataFrame(columns = Nifty50_titles_list )
+df
+column_row = table.find_all('tr')
+column_row
+for row in column_row[1:]:
+    row_data = row.find_all('td')
+    individual_row_data = [data.text.strip() for data in row_data]    
+    length = len(df)
+    df.loc[length] = individual_row_data
+df
+#To convert collected Data Frame to CSV
+df.to_csv(r'C:\Users\prakrij\Downloads\Python_Learning\LEARNPYTHON\Web Scraping\Nifty50.csv', index = False)
